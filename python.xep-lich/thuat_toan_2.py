@@ -12,40 +12,41 @@ def check_vong_dau(m, vong):
         return False
 
 
-teams = [i for i in range(1, 21)]
+teams = [i for i in range(1, 9)]
 
 so_vong_dau = len(teams)-1
 so_tran_moi_vong = len(teams)//2
 
 # tạo các trận đấu
-matchs = []
+matchs_root = []
 for i in range(len(teams)):
     for j in range(i+1, len(teams)):
-        matchs.append([teams[i], teams[j]])
+        matchs_root.append([teams[i], teams[j]])
 
-so_lan_tim_team_random = len(matchs) * 2
+matchs = matchs_root[:]
 
 lich_dau = []
 
-while len(lich_dau) != so_vong_dau:
+while len(lich_dau) < so_vong_dau:
     vong_dau = []
 
-    while len(vong_dau) != so_tran_moi_vong:
-        dem = 0
+    while len(vong_dau) < so_tran_moi_vong:
+        random.shuffle(matchs)
 
-        while True:
-            match = random.choice(matchs)
+        reset = True
+        for match in matchs:
             if not check_vong_dau(match, vong_dau):
+                vong_dau.append(match)
+                matchs.remove(match)
+
+                reset = False
                 break
 
-            if dem <= so_lan_tim_team_random:
-                dem += 1
-            else:
-                lich_dau.clear()
-                vong_dau.clear()
-                dem = 0
-
-        vong_dau.append(match)
+        if reset:
+            lich_dau.clear()
+            vong_dau.clear()
+            matchs = matchs_root[:]
+            print('reset thanh cong')
 
     lich_dau.append(vong_dau)
 
