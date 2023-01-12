@@ -12,7 +12,14 @@ def check_vong_dau(m, vong):
         return False
 
 
-teams = [i for i in range(1, 9)]
+def show_match_by_team(team):
+    for vong in lich_dau:
+        for tran in vong:
+            if team in tran:
+                print(tran)
+
+
+teams = [i for i in range(0, 6)]
 
 so_vong_dau = len(teams)-1
 so_tran_moi_vong = len(teams)//2
@@ -21,9 +28,13 @@ so_tran_moi_vong = len(teams)//2
 matchs_root = []
 for i in range(len(teams)):
     for j in range(i+1, len(teams)):
-        matchs_root.append([teams[i], teams[j]])
+        if (i+j) % 2 == 0:
+            matchs_root.append([teams[i], teams[j]])
+        else:
+            matchs_root.append([teams[j], teams[i]])
 
 matchs = matchs_root[:]
+print(matchs_root)
 
 lich_dau = []
 
@@ -52,3 +63,6 @@ while len(lich_dau) < so_vong_dau:
 
 for vong in lich_dau:
     print(vong)
+
+
+show_match_by_team(0)
