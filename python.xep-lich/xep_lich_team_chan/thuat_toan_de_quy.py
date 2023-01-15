@@ -3,7 +3,11 @@ import random
 
 ############### biến toàn cục ###############
 
-list_team = [i for i in range(0, 10)]
+list_team = [i for i in range(0, 6)]
+
+if len(list_team) % 2 != 0:
+    print('--- Error: Tổng số lượng các đội phải là số chẵn ---')
+    exit()
 
 len_row = len(list_team)-1
 len_match_in_row = len(list_team)//2
@@ -22,6 +26,13 @@ for i in range(len(list_team)):
 def check_match(match_check, round):
     all_teams = [team for match in round for team in match]
     return all(team not in all_teams for team in match_check)
+
+
+def shuffle_match_in_round(round_list):
+    for round in round_list:
+        random.shuffle(round)
+
+    return round_list
 
 
 class Schedule:
@@ -64,7 +75,11 @@ class Schedule:
         self.round_wrong_list.append(round_wrong[:])
 
 
-def create_schedule(list_round: list, list_round_wrong: list):
+def create_home_rounds(rounds_away):
+    return shuffle_match_in_round([[match[::-1] for match in round] for round in rounds_away])
+
+
+def create_away_rounds(list_round: list, list_round_wrong: list):
     # Kiểm tra xem đã đủ vòng đấu hay chưa
     if len(list_round) == len_row:
         return list_round
@@ -86,22 +101,29 @@ def create_schedule(list_round: list, list_round_wrong: list):
         if round not in schedule.round_wrong_list:
             schedule.round_list.append(round[:])
 
-            round_list = create_schedule(schedule.round_list, [])
+            round_list = create_away_rounds(schedule.round_list, [])
             if (round_list):
                 return round_list
             else:
                 schedule.add_round_wrong()
-                return create_schedule(schedule.round_list, schedule.round_wrong_list)
+                return create_away_rounds(schedule.round_list, schedule.round_wrong_list)
         else:
-            return create_schedule(schedule.round_list, schedule.round_wrong_list)
+            return create_away_rounds(schedule.round_list, schedule.round_wrong_list)
     else:
         return False
 
 
-list_lich_dau = create_schedule([], [])
+away_rounds = create_away_rounds([], [])
 
-if list_lich_dau:
-    for x in list_lich_dau:
+if away_rounds:
+    print('\n--- Lượt đi ---')
+    for x in away_rounds:
         print(x)
+
+    home_rounds = create_home_rounds(away_rounds)
+    print('\n--- Lượt về ---')
+    for x in home_rounds:
+        print(x)
+
 else:
     print('khong the sap xep lich dau')
