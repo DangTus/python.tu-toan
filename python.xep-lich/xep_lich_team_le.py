@@ -11,17 +11,17 @@ def create_return_match(match_schedule):
 
 
 # Create a list of teams
-teams = list(range(4))
+teams = list(range(5))
 
-# Check if the number of teams is even
-if len(teams) % 2 != 0:
-    print("The number of teams must be even.")
+# Check if the number of teams is odd
+if len(teams) % 2 == 0:
+    print("The number of teams must be odd.")
     exit()
 
 # Shuffle the teams
 random.shuffle(teams)
 
-num_of_rounds = len(teams) - 1
+num_of_rounds = len(teams)
 num_of_matches_per_round = len(teams) // 2
 
 match_schedule = []
@@ -31,11 +31,11 @@ for i in range(num_of_rounds):
     round_matches = []
 
     # Create matches per round
-    for j in range(num_of_matches_per_round):
-        if i % 2 == 0:
-            match = [teams[j], teams[-(j+1)]]
+    for j in range(1, num_of_matches_per_round+1):
+        if j % 2 == 0:
+            match = [teams[j], teams[-j]]
         else:
-            match = [teams[-(j+1)], teams[j]]
+            match = [teams[-j], teams[j]]
 
         # Add match to round
         round_matches.append(match)
@@ -43,12 +43,12 @@ for i in range(num_of_rounds):
     # Shuffle matches per round
     random.shuffle(round_matches)
 
-    # Add round to match_schedule
+    # Add round to match schedule
     match_schedule.append(round_matches)
 
     # Rearrange teams to create new round
-    team_to_move = teams.pop(num_of_rounds)
-    teams.insert(2, team_to_move)
+    team_to_move = teams.pop(0)
+    teams.append(team_to_move)
 
 print("First Leg")
 for round_matches in match_schedule:
